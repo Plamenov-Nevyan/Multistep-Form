@@ -56,7 +56,7 @@ function App() {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    nextStep();
+    return !isLastStep ? nextStep() : alert('Thank you for filling out this form, your profile was created successfully!')
   };
 
   return (
