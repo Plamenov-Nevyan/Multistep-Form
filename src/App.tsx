@@ -1,72 +1,84 @@
-import { FormEvent, useState } from "react"
-import { AccountForm } from "./AccountForm"
-import { AdressForm } from "./AdressForm"
-import { useMultistepForm } from "./useMultistepForm"
-import { UserForm } from "./UserForm"
+import { FormEvent, useState } from "react";
+import { AccountForm } from "./AccountForm";
+import { AdressForm } from "./AdressForm";
+import { useMultistepForm } from "./useMultistepForm";
+import { UserForm } from "./UserForm";
 
 type FormData = {
-    firstName : string,
-    lastName : string,
-    age : string,
-    street : string,
-    city : string,
-    state : string,
-    ZIP : string,
-    email : string,
-    password : string,
-}
+  firstName: string;
+  lastName: string;
+  age: string;
+  street: string;
+  city: string;
+  state: string;
+  ZIP: string;
+  email: string;
+  password: string;
+};
 
 let initialData: FormData = {
-    firstName : "",
-    lastName : "",
-    age : "",
-    street : "",
-    city : "",
-    state : "",
-    ZIP : "",
-    email : "",
-    password : ""
-}
+  firstName: "",
+  lastName: "",
+  age: "",
+  street: "",
+  city: "",
+  state: "",
+  ZIP: "",
+  email: "",
+  password: "",
+};
 
 function App() {
-    const {
-      steps,
-      currentStepIndex,
-      step,
-      isFirstStep,
-      isLastStep,
-      nextStep,
-      previousStep
-    } = useMultistepForm([<UserForm {...data}/>, <AdressForm {...data} />, <AccountForm {...data}/>])
+  const [data, setData] = useState(initialData);
 
-    const [data, setData] = useState(initialData)
+  function updateFormState(fields: Partial<FormData>) {
+    setData((prevData) => {
+      return {
+        ...prevData,
+        ...fields,
+      };
+    });
+  }
 
-    const onSubmit = (e : FormEvent) => {
-            e.preventDefault()
-            nextStep()
-    }
+  const {
+    steps,
+    currentStepIndex,
+    step,
+    isFirstStep,
+    isLastStep,
+    nextStep,
+    previousStep,
+  } = useMultistepForm([
+    <UserForm {...data} updateFormState={updateFormState} />,
+    <AdressForm {...data} updateFormState={updateFormState} />,
+    <AccountForm {...data} updateFormState={updateFormState} />,
+  ]);
 
- return <div id="container">
-    <form onSubmit = {onSubmit}>
-       <div id="steps_handler">
-        {currentStepIndex + 1} / {steps.length}
-       </div>
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    nextStep();
+  };
 
-    {step}
+  return (
+    <div id="container">
+      <form onSubmit={onSubmit}>
+        <div id="steps_handler">
+          {currentStepIndex + 1} / {steps.length}
+        </div>
 
-    <div id="buttons_container">
-        {!isFirstStep && <button type="button" onClick={previousStep}>
-            Previous
-        </button>}
-        <button type="submit">
-            {isLastStep
-              ? 'Finish'
-              : 'Next'
-            }
-        </button>
+        {step}
+
+        <div id="buttons_container">
+          {!isFirstStep && (
+            <button type="button" onClick={previousStep}>
+              Previous
+            </button>
+          )}
+          <button type="submit">{isLastStep ? "Finish" : "Next"}</button>
+        </div>
+      </form>
     </div>
-    </form>
- </div>
+  );
 }
 
-export default App
+export default App;
