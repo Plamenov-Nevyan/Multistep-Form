@@ -1,8 +1,8 @@
 import { FormEvent, useState } from "react";
-import { AccountForm } from "./AccountForm";
-import { AdressForm } from "./AdressForm";
-import { useMultistepForm } from "./useMultistepForm";
-import { UserForm } from "./UserForm";
+import { AccountForm } from "./components/AccountForm";
+import { AdressForm } from "./components/AdressForm";
+import { useMultistepForm } from "./hooks/useMultistepForm";
+import { UserForm } from "./components/UserForm";
 
 type FormData = {
   firstName: string;
@@ -62,6 +62,9 @@ function App() {
   return (
     <div id="container">
       <form onSubmit={onSubmit}>
+      <div className="progress-bar">
+        <div style={{width : isFirstStep ? '25%' : isLastStep ?'75%' : '50%'}}></div>
+      </div>
         <div id="steps_handler">
           {currentStepIndex + 1} / {steps.length}
         </div>
